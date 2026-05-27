@@ -46,7 +46,10 @@ FRONTEND_RUN_PORT="${FRONTEND_RUN_PORT:-6103}"
 WAIT_FOR_READINESS="${WAIT_FOR_READINESS:-true}"
 WAIT_FOR_VLLM_BEFORE_EMBEDDING="${WAIT_FOR_VLLM_BEFORE_EMBEDDING:-true}"
 READINESS_TIMEOUT_SEC="${READINESS_TIMEOUT_SEC:-480}"
+VLLM_READINESS_TIMEOUT_SEC="${VLLM_READINESS_TIMEOUT_SEC:-1200}"
 READINESS_INTERVAL_SEC="${READINESS_INTERVAL_SEC:-5}"
+CLEAN_BEFORE_START="${CLEAN_BEFORE_START:-true}"
+CLEAN_DOCKER_BEFORE_START="${CLEAN_DOCKER_BEFORE_START:-true}"
 
 # docker-compose.all.yml đã có đầy đủ custom services chạy bằng Docker image.
 # Mặc định chỉ bật tmux code-services khi chạy compose local.
@@ -114,11 +117,106 @@ validate_local_ports() {
   ensure_local_port_range "REDIS_EXPORTER_HOST_PORT" "${REDIS_EXPORTER_HOST_PORT:-6123}"
 }
 
+print_port_summary() {
+  cat <<EOF
+[ports] Local access map
+  - App via Nginx:          http://localhost:${NGINX_PUBLIC_PORT:-6101}
+  - Backend docs:           http://localhost:${SERVER_PORT:-6102}/docs
+  - Frontend direct:        http://localhost:${FRONTEND_RUN_PORT:-6103}
+  - Parse-data docs:        http://localhost:${PARSER_HOST_PORT:-6104}/docs
+  - Embedding docs:         http://localhost:${EMBEDDING_HOST_PORT:-6105}/docs
+  - vLLM models:            http://localhost:${VLLM_HOST_PORT:-6106}/v1/models
+  - Prometheus collector:   http://localhost:${PROM_COLLECTOR_HOST_PORT:-6107}
+  - Postgres/PgBouncer/UI:  ${POSTGRES_HOST_PORT:-6110}/${PGBOUNCER_HOST_PORT:-6111}/${ADMINER_HOST_PORT:-6112}
+  - Qdrant/MinIO/Redis:     ${QDRANT_HOST_PORT:-6113}/${MINIO_API_HOST_PORT:-6114}-${MINIO_CONSOLE_HOST_PORT:-6115}/${REDIS_HOST_PORT:-6116}
+  - Monitoring/Search:      ${PROMETHEUS_HOST_PORT:-6118}-${SEARXNG_HOST_PORT:-6121}
+  - Exporters:              ${POSTGRES_EXPORTER_HOST_PORT:-6122}-${REDIS_EXPORTER_HOST_PORT:-6123}
+EOF
+}
+
+find_project_code_pids() {
+  local proc pid cwd cmd
+  for proc in /proc/[0-9]*; do
+    pid="${proc##*/}"
+    if [[ "$pid" == "$$" || "$pid" == "$BASHPID" || "$pid" == "$PPID" ]]; then
+      continue
+    fi
+
+    cwd="$(readlink -f "$proc/cwd" 2>/dev/null || true)"
+    if [[ "$cwd" != "$PROJECT_ROOT"* ]]; then
+      continue
+    fi
+
+    cmd="$(tr '\0' ' ' < "$proc/cmdline" 2>/dev/null || true)"
+    case "$cwd" in
+      "$PROJECT_ROOT/backend"|"$PROJECT_ROOT/backend"/*|\
+      "$PROJECT_ROOT/frontend"|"$PROJECT_ROOT/frontend"/*|\
+      "$PROJECT_ROOT/parse-data"|"$PROJECT_ROOT/parse-data"/*|\
+      "$PROJECT_ROOT/embedding"|"$PROJECT_ROOT/embedding"/*|\
+      "$PROJECT_ROOT/prometheus-collector"|"$PROJECT_ROOT/prometheus-collector"/*)
+        if [[ "$cmd" == *"main.py"* || "$cmd" == *"uvicorn"* || "$cmd" == *"next"* || "$cmd" == *"npm run start"* || "$cmd" == *"node "* ]]; then
+          echo "$pid"
+        fi
+        ;;
+    esac
+  done | sort -n | uniq
+}
+
+cleanup_stale_code_processes() {
+  local pids remaining
+  pids="$(find_project_code_pids | tr '\n' ' ' || true)"
+  if [[ -z "${pids// }" ]]; then
+    echo "[cleanup] No stale project code process found"
+    return 0
+  fi
+
+  echo "[cleanup] Stopping stale project code processes: $pids"
+  # shellcheck disable=SC2086
+  kill $pids 2>/dev/null || true
+  sleep 2
+
+  remaining="$(find_project_code_pids | tr '\n' ' ' || true)"
+  if [[ -n "${remaining// }" ]]; then
+    echo "[cleanup] Force killing remaining project code processes: $remaining"
+    # shellcheck disable=SC2086
+    kill -9 $remaining 2>/dev/null || true
+  fi
+}
+
+cleanup_before_start() {
+  if [[ "$CLEAN_BEFORE_START" != "true" ]]; then
+    echo "[cleanup] Skip pre-start cleanup (CLEAN_BEFORE_START=false)"
+    return 0
+  fi
+
+  echo "[cleanup] Cleaning previous project runtime before start"
+  if command -v tmux >/dev/null 2>&1; then
+    if tmux has-session -t "$CODE_TMUX_SESSION" >/dev/null 2>&1; then
+      echo "[cleanup] Killing old tmux session: $CODE_TMUX_SESSION"
+      tmux kill-session -t "$CODE_TMUX_SESSION" || true
+    fi
+  fi
+
+  cleanup_stale_code_processes
+
+  if [[ "$CLEAN_DOCKER_BEFORE_START" == "true" ]]; then
+    echo "[cleanup] Running docker compose down for a clean project start"
+    if [[ -f "$ENV_FILE" ]]; then
+      docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" down --remove-orphans
+    else
+      docker compose -f "$COMPOSE_FILE" down --remove-orphans
+    fi
+  else
+    echo "[cleanup] Skip compose down (CLEAN_DOCKER_BEFORE_START=false)"
+  fi
+}
+
 wait_for_http() {
   local name="$1"
   local url="$2"
   local expected="${3:-200}"
-  local deadline=$((SECONDS + READINESS_TIMEOUT_SEC))
+  local timeout_sec="${4:-$READINESS_TIMEOUT_SEC}"
+  local deadline=$((SECONDS + timeout_sec))
   local code
 
   if [[ "$WAIT_FOR_READINESS" != "true" ]]; then
@@ -136,7 +234,7 @@ wait_for_http() {
     sleep "$READINESS_INTERVAL_SEC"
   done
 
-  echo "ERROR: $name is not ready after ${READINESS_TIMEOUT_SEC}s: $url"
+  echo "ERROR: $name is not ready after ${timeout_sec}s: $url"
   return 1
 }
 
@@ -378,7 +476,7 @@ start_code_services_tmux() {
   tmux new-window -t "$CODE_TMUX_SESSION" -n "$PROMETHEUS_COLLECTOR_TMUX_WINDOW" \
     "$(build_tmux_service_command "prometheus-collector" "$prom_cmd" "$logs_dir/prometheus-collector.log")"
 
-  wait_for_http "vLLM" "http://127.0.0.1:${VLLM_HOST_PORT:-6106}/v1/models"
+  wait_for_http "vLLM" "http://127.0.0.1:${VLLM_HOST_PORT:-6106}/v1/models" "200" "$VLLM_READINESS_TIMEOUT_SEC"
 
   tmux new-window -t "$CODE_TMUX_SESSION" -n "$EMBEDDING_TMUX_WINDOW" \
     "$(build_tmux_service_command "embedding" "$embedding_cmd" "$logs_dir/embedding.log")"
@@ -398,6 +496,8 @@ ensure_cmd docker
 echo "[step 1/7] Loading .env (if exists)"
 load_env_if_exists
 validate_local_ports
+print_port_summary
+cleanup_before_start
 
 echo "[step 2/7] Setting up local dependencies"
 setup_local_dependencies
@@ -416,7 +516,7 @@ else
 fi
 
 if [[ "$WAIT_FOR_VLLM_BEFORE_EMBEDDING" == "true" ]]; then
-  wait_for_http "vLLM" "http://127.0.0.1:${VLLM_HOST_PORT:-6106}/v1/models"
+  wait_for_http "vLLM" "http://127.0.0.1:${VLLM_HOST_PORT:-6106}/v1/models" "200" "$VLLM_READINESS_TIMEOUT_SEC"
 fi
 
 echo "[step 6/7] Auto restore backup on first run (if available)"
@@ -445,4 +545,6 @@ echo "Access app via nginx reverse proxy:"
 echo "  - http://localhost:${NGINX_PUBLIC_PORT:-6101}"
 if [[ "$RUN_CODE_SERVICES" == "true" ]]; then
   echo "Code services tmux session: $CODE_TMUX_SESSION"
+  echo "Attach logs: tmux attach -t $CODE_TMUX_SESSION"
+  echo "Runtime logs: $PROJECT_ROOT/$RUNTIME_DIR/logs"
 fi

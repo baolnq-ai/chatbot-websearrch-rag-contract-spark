@@ -22,13 +22,15 @@ Port local của project phải nằm trong dải `6100-6150`. Script start sẽ
 Start full stack từ fresh clone:
 
 ```bash
-bash ./run_all_services.sh
+bash ./setup.sh
 ```
 
-Nếu `.env` chưa tồn tại, script tự tạo từ `.env.example`. Khi đã cài dependencies và muốn restart nhanh, dùng:
+Nếu `.env` chưa tồn tại, script tự tạo từ `.env.example`. Mặc định script tự dọn runtime cũ trước khi chạy: kill tmux `rag-chatbot-code`, kill stale code process trong source hiện tại và chạy `docker compose down --remove-orphans`.
+
+Khi đã cài dependencies và muốn restart nhanh, dùng:
 
 ```bash
-SETUP_LOCAL_DEPS=false FRONTEND_BUILD_ON_START=true RUN_CODE_SERVICES=true bash ./run_all_services.sh
+SETUP_LOCAL_DEPS=false FRONTEND_BUILD_ON_START=true RUN_CODE_SERVICES=true bash ./setup.sh
 ```
 
 Stop full stack:
@@ -41,6 +43,7 @@ Mặc định ổn định cho GB10/DGX Spark local:
 
 - `GPU_MEMORY_UTIL=0.30`.
 - `LLM_CONTEXT_WINDOW=8192`.
+- `VLLM_READINESS_TIMEOUT_SEC=1200` để đủ thời gian cold start/cache trống.
 - vLLM được chờ ready trước khi bật embedding để tránh tranh unified memory lúc init.
 
 ## 4. Sự cố thường gặp và cách xử lý

@@ -46,7 +46,7 @@ Mục tiêu kỹ thuật của dự án là giữ pipeline rõ ràng, giảm chi
 Fresh clone có thể chạy bằng một lệnh:
 
 ```bash
-bash ./run_all_services.sh
+bash ./setup.sh
 ```
 
 Nếu chưa có `.env`, script tự tạo từ `.env.example`. Sau đó sửa `.env` ở root repo, không sửa trực tiếp `.env.example` cho secret thật.
@@ -54,7 +54,7 @@ Nếu chưa có `.env`, script tự tạo từ `.env.example`. Sau đó sửa `.
 Nếu máy đã có Hugging Face cache ở thư mục khác, có thể truyền ngay trong lệnh đầu tiên:
 
 ```bash
-HF_CACHE_MOUNT=/path/to/cache/huggingface bash ./run_all_services.sh
+HF_CACHE_MOUNT=/path/to/cache/huggingface bash ./setup.sh
 ```
 
 ### Tối thiểu để chạy local
@@ -285,17 +285,19 @@ Toàn bộ service local của dự án dùng dải port `6100-6150`. Khi thêm 
 ### Chạy local một lệnh
 
 ```bash
-bash ./run_all_services.sh
+bash ./setup.sh
 ```
 
 Nếu chưa có `.env`, script tự tạo `.env` local từ `.env.example`, đổi `HF_CACHE_MOUNT` về `cache/huggingface` của repo hiện tại, cài dependencies nếu thiếu, build/pull image cần thiết, start Docker services rồi start code services trong tmux.
 
 Điền secret thật trong `.env` trước khi triển khai production. Các service backend, embedding, parse-data và prometheus-collector đọc env root; không dùng `.env` riêng trong từng service. Frontend có thể giữ `frontend/.env.local`.
 
+Mặc định `setup.sh` tự dọn runtime cũ trước khi start: kill tmux `rag-chatbot-code`, kill stale code process trong source hiện tại và chạy `docker compose down --remove-orphans`. Script cũng in bản đồ port, đường dẫn tmux/log và chờ vLLM bằng timeout riêng `VLLM_READINESS_TIMEOUT_SEC=1200` để cold start/cache trống không fail giả.
+
 ### Restart nhanh khi đã cài dependency
 
 ```bash
-SETUP_LOCAL_DEPS=false FRONTEND_BUILD_ON_START=true RUN_CODE_SERVICES=true bash ./run_all_services.sh
+SETUP_LOCAL_DEPS=false FRONTEND_BUILD_ON_START=true RUN_CODE_SERVICES=true bash ./setup.sh
 ```
 
 Script dùng tmux session/window theo env:
@@ -316,6 +318,7 @@ bash ./stop_all_services.sh
 ```
 
 Script này dừng tmux code services và `docker compose down`, nhưng giữ nguyên dữ liệu runtime trong `cache/` và `.runtime/`.
+`stop_all_services.sh` cũng kill stale process còn nằm trong source hiện tại để tránh tràn RAM khi restart nhiều lần.
 
 ### Chạy hạ tầng Docker
 
@@ -386,6 +389,7 @@ cache/                   Runtime data/cache local, không commit secret hoặc d
 - [Cấu hình Env, vLLM, RAG và Cache](docs/configuration/env-vllm-rag-cache.md)
 - [Runbook triển khai](docs/deployment/deployment-runbook.md)
 - [Runbook vận hành](docs/operations/operations-runbook.md)
+- [Setup/stop GB10/DGX Spark](docs/operations/setup-stop-gb10-20260527-v1.md)
 - [API reference](docs/api/api-reference.md)
 - [Chính sách CI/CD](docs/cicd/cicd-policy.md)
 - [Reports hub](docs/reports/README.md)
@@ -414,7 +418,7 @@ cache/                   Runtime data/cache local, không commit secret hoặc d
 - vLLM local trên GB10/DGX Spark đã được xác nhận chạy ổn ngày 2026-05-27 ở `LLM_CONTEXT_WINDOW=8192` và `GPU_MEMORY_UTIL=0.30`. Khi máy thật sự trống memory có thể thử tăng context/GPU util, nhưng cần benchmark lại trước khi ghi thành mặc định.
 - Benchmark 2026-05-27 chạy 16 câu/22 checks, pass 22/0; artifact nằm trong `test/benmark-10-30/`.
 - Demo banner 2026-05-27 dùng `docs/assets/rag-chat-demo.webp` làm ảnh chính trên README; GIF fallback nằm ở `docs/assets/rag-chat-demo.gif`.
-- Fresh clone local có thể chạy bằng `bash ./run_all_services.sh`; script sẽ tự tạo `.env` từ `.env.example` nếu chưa có.
+- Fresh clone local có thể chạy bằng `bash ./setup.sh`; script sẽ tự tạo `.env` từ `.env.example` nếu chưa có.
 - Cache dữ liệu như `cache/pgdata`, `cache/qdrant_storage`, `cache/minio`, `cache/redis_data` và `cache/prometheus_data` là volume runtime, không xóa nếu chưa backup.
 - File `.env` thật không được commit. Chỉ commit `.env.example` không chứa secret.
 

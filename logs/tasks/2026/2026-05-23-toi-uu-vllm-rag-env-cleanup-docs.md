@@ -14,7 +14,7 @@ Lập kế hoạch theo `plan-skill` cho việc giảm VRAM vLLM, chuẩn hóa e
 - Kiểm tra env hiện có ở root và từng service.
 - Kiểm tra logic load env trong `backend/main.py`, `embedding/main.py`, `parse-data/main.py`.
 - Kiểm tra các hằng số RAG liên quan đến context/output/path budget trong `backend/agent_chatbot/node/util/rag_query_util.py`.
-- Kiểm tra `run_all_services.sh` để nắm cách chạy tmux và nginx upstream.
+- Kiểm tra `setup.sh` để nắm cách chạy tmux và nginx upstream.
 - Kiểm tra dung lượng cache/venv/build artifact trong project.
 - Kiểm tra trạng thái Git để ghi nhận worktree đang có nhiều thay đổi chưa commit.
 

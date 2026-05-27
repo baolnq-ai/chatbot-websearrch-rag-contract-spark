@@ -8,7 +8,7 @@ Chuẩn hóa source để push sang repo mới `baolnq-ai/chatbot-websearrch-rag
 
 - `.env.example` dùng port local `6100-6150`, `GPU_MEMORY_UTIL=0.30`, `LLM_CONTEXT_WINDOW=8192`.
 - `.env.example` dùng `HF_CACHE_MOUNT=./cache/huggingface`.
-- `run_all_services.sh` tự tạo `.env` từ `.env.example` khi fresh clone chưa có `.env`.
+- `setup.sh` tự tạo `.env` từ `.env.example` khi fresh clone chưa có `.env`.
 - `GEOIP_STRICT=false` trong `.env.example` để fresh clone không bị chặn nếu chưa có MaxMind key.
 - `backup.sh` đọc `.env` và bỏ fallback Redis password hardcoded.
 - `backend/database/setup_redis.py` bỏ Redis password cũ và redact Redis URL khi log.
@@ -17,14 +17,14 @@ Chuẩn hóa source để push sang repo mới `baolnq-ai/chatbot-websearrch-rag
 
 - README cập nhật cách chạy một lệnh, port, hạ tầng GB10/DGX Spark và benchmark.
 - README đưa mục `Cần key gì` lên đầu để người clone biết sửa `.env` ở đâu và key nào bắt buộc/optional.
-- `run_all_services.sh` tôn trọng `HF_CACHE_MOUNT` truyền từ shell khi tự tạo `.env`, giúp fresh clone dùng lại model cache sẵn có bằng một lệnh.
+- `setup.sh` tôn trọng `HF_CACHE_MOUNT` truyền từ shell khi tự tạo `.env`, giúp fresh clone dùng lại model cache sẵn có bằng một lệnh.
 - Fresh clone test đầu tiên fail ở vLLM readiness do lỗi memory profiling lặp lại trên unified memory. Đã thêm `VLLM_KV_CACHE_MEMORY_BYTES=2147483648` và truyền `--kv-cache-memory-bytes` để tránh profiling KV cache.
 - Docs vận hành/cấu hình cập nhật fresh clone và cache path.
 - Benchmark/evidence nằm trong `test/benmark-10-30` và `test/type test/...` để xem được trên GitHub.
 
 ## Verify trước commit
 
-- `bash -n run_all_services.sh stop_all_services.sh backup.sh`: pass.
+- `bash -n setup.sh stop_all_services.sh backup.sh`: pass.
 - `node --check test/benmark-10-30/scripts/run-benchmark.mjs`: pass.
 - `python3 -m py_compile backend/database/setup_redis.py backend/main.py`: pass.
 - `docker compose --env-file .env.example -f docker-compose.yml config`: pass.
@@ -61,7 +61,7 @@ Thư mục test:
 Lệnh chạy một lần:
 
 ```bash
-HF_CACHE_MOUNT=/home/ntcai/NTC-App/chatbot/multiagent_chatbot_contract_github/cache/huggingface bash ./run_all_services.sh
+HF_CACHE_MOUNT=/home/ntcai/NTC-App/chatbot/multiagent_chatbot_contract_github/cache/huggingface bash ./setup.sh
 ```
 
 Kết quả:

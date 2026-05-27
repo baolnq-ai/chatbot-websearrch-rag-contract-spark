@@ -15,7 +15,7 @@ Task này clone repo, đọc tài liệu/source hiện có, chuẩn hóa cách c
 - Đã đọc các tài liệu vận hành chính và test web search cũ.
 - Đã cập nhật mặc định local sang dải port `6101-6150`.
 - Đã đổi tmux session mặc định sang `rag-chatbot-code`.
-- Đã chạy `bash ./run_all_services.sh`; Docker services và tmux code services đã lên.
+- Đã chạy `bash ./setup.sh`; Docker services và tmux code services đã lên.
 - Đã sửa lỗi fresh clone ở backend: `StaticFiles(directory="static")` bị fail khi `backend/static` chưa tồn tại.
 - Đã test provider CRUD qua API root: tạo thử OpenRouter, Groq, Local vLLM provider configs rồi cleanup.
 
@@ -43,7 +43,7 @@ Task này clone repo, đọc tài liệu/source hiện có, chuẩn hóa cách c
 
 - Sau khi dừng workload nặng ngoài project, cấu hình chuẩn hiện tại đã được xác nhận chạy ổn với `GPU_MEMORY_UTIL=0.30`, `LLM_CONTEXT_WINDOW=8192`.
 - Benchmark `test/benmark-10-30` pass 22/22 checks, 16 câu hỏi, có upload file, embedding, RAG, web search, contract và dashboard ảnh.
-- `run_all_services.sh` hiện chờ vLLM ready trước khi bật embedding để giảm lỗi profiling unified memory.
+- `setup.sh` hiện chờ vLLM ready trước khi bật embedding để giảm lỗi profiling unified memory.
 
 ## Rủi ro ghi nhận trong lần test ban đầu
 

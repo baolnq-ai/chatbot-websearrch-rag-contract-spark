@@ -21,6 +21,7 @@ Bộ tài liệu này giúp đội phát triển và vận hành:
 - [Cấu hình Env, vLLM, RAG và Cache](configuration/env-vllm-rag-cache.md)
 - [Runbook triển khai](deployment/deployment-runbook.md)
 - [Runbook vận hành](operations/operations-runbook.md)
+- [Setup/stop GB10/DGX Spark](operations/setup-stop-gb10-20260527-v1.md)
 - [API tham chiếu](api/api-reference.md)
 - [Tổng hợp kế hoạch và lịch sử](history/roadmap-and-plans-summary.md)
 - [Chuẩn taxonomy và đặt tên tài liệu](standards/documentation-taxonomy-and-naming.md)

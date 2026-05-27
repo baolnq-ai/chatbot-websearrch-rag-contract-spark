@@ -10,7 +10,7 @@ Các service code hiện đọc env từ thư mục gốc:
 - `.env`: cấu hình local/prod override.
 - `.env.example`: mẫu đầy đủ không chứa secret thật.
 
-Fresh clone local có thể chạy `bash ./run_all_services.sh`; script tự tạo `.env` từ `.env.example` nếu chưa có.
+Fresh clone local có thể chạy `bash ./setup.sh`; script tự tạo `.env` từ `.env.example` nếu chưa có.
 
 Không dùng `.env` riêng trong `backend`, `embedding`, `parse-data`, `prometheus-collector`. Frontend vẫn có thể dùng `frontend/.env.local`.
 
@@ -55,7 +55,7 @@ Không xóa các volume dữ liệu nếu chưa backup hoặc chưa chủ độn
 
 - `backend/database/geoip/*.mmdb` không commit lên Git vì là dữ liệu runtime lớn.
 - Fresh clone mặc định `GEOIP_STRICT=false`, backend vẫn chạy nếu chưa có GeoIP database.
-- Nếu cần geolocation đầy đủ, đặt `MAXMIND_LICENSE_KEY` hoặc `GEOIP_CITY_DB_URL`/`GEOIP_ASN_DB_URL`, sau đó chạy lại `bash ./run_all_services.sh`.
+- Nếu cần geolocation đầy đủ, đặt `MAXMIND_LICENSE_KEY` hoặc `GEOIP_CITY_DB_URL`/`GEOIP_ASN_DB_URL`, sau đó chạy lại `bash ./setup.sh`.
 
 ## Cache đã dọn
 

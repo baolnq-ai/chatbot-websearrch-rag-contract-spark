@@ -12,12 +12,12 @@ Clone repo, đọc tài liệu/source liên quan, chạy hệ thống bằng tmu
 ## Diễn biến
 
 - Đã clone repo từ `https://github.com/baolnq-ai/multiagent_chatbot_contract_github.git`.
-- Đã đọc README chính, `run_all_services.sh`, test websearch, plan/log tối ưu web search cũ và danh sách file docs/source.
+- Đã đọc README chính, `setup.sh`, test websearch, plan/log tối ưu web search cũ và danh sách file docs/source.
 - Phát hiện script đã có tmux nhưng session mặc định chưa chứa chữ `chatbot`.
 - Phát hiện host ports mặc định còn nằm ngoài dải 6101-6150.
 - Đã cập nhật mặc định tmux sang `rag-chatbot-code`.
 - Đã cập nhật port local/host-facing sang dải `6101-6150` trong `.env.example`, compose, README, runbook, Prometheus targets, README parse-data và embedding.
-- Đã chạy `bash ./run_all_services.sh`, tạo tmux `rag-chatbot-code` và start Docker services.
+- Đã chạy `bash ./setup.sh`, tạo tmux `rag-chatbot-code` và start Docker services.
 - Backend fail lần đầu do thiếu `backend/static`; đã sửa `StaticFiles(..., check_dir=False)` và restart backend window.
 - Đã test provider CRUD qua API root: tạo OpenRouter/Groq/Local vLLM smoke configs, sau đó cleanup.
 

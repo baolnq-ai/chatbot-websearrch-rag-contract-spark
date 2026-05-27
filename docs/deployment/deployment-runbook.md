@@ -13,7 +13,7 @@ Cập nhật lần cuối: 2026-05-27
 ### Cách 1: Script tổng
 
 ```bash
-bash ./run_all_services.sh
+bash ./setup.sh
 ```
 
 Script sẽ:

@@ -40,6 +40,6 @@ Hệ thống theo kiến trúc dịch vụ tách lớp:
 
 ## 5. Môi trường vận hành
 
-- Local/dev: có thể chạy bằng script `run_all_services.sh`.
+- Local/dev: có thể chạy bằng script `setup.sh`.
 - Docker compose: bật toàn bộ hạ tầng qua file compose.
 - Production: khuyến nghị tách cấu hình secrets và bật đầy đủ guardrail mạng.

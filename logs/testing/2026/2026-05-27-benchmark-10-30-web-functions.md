@@ -6,9 +6,9 @@ Benchmark 10-30 câu hỏi/luồng qua public web API, có upload file, latency,
 
 ## Phase 1 - Chuẩn bị vận hành
 
-- Đọc `run_all_services.sh`, compose và các endpoint liên quan.
+- Đọc `setup.sh`, compose và các endpoint liên quan.
 - Bổ sung `stop_all_services.sh` để dừng dự án không xóa dữ liệu.
-- Cập nhật `run_all_services.sh`:
+- Cập nhật `setup.sh`:
   - validate port local trong dải `6100-6150`;
   - chờ vLLM readiness trước khi bật embedding;
   - chờ backend/frontend/parse-data/embedding sau khi start.
@@ -58,7 +58,7 @@ Phạm vi đã chạy:
 ## Phase 3 - Quan sát hạ tầng
 
 - `stop_all_services.sh` dừng đúng tmux session và compose services của project, không xóa cache/runtime data.
-- `run_all_services.sh` start lại được toàn bộ stack trên dải port `6100-6150`.
+- `setup.sh` start lại được toàn bộ stack trên dải port `6100-6150`.
 - vLLM gặp một lần lỗi profiling do unified memory thay đổi trong lúc init, container tự restart theo compose policy và readiness pass ở lần sau.
 - Sau restart: backend, frontend nginx, parse-data, embedding, vLLM đều readiness 200.
 - Process RAM cao nhất trong lúc benchmark: embedding Python khoảng 5.4GB RSS; vLLM EngineCore khoảng 2.0GB RSS cộng phần unified VRAM do driver quản lý.

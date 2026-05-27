@@ -1,8 +1,8 @@
-# Báo cáo demo GIF banner - 2026-05-27
+# Báo cáo demo banner - 2026-05-27
 
 ## Mục tiêu
 
-Quay lại demo ứng dụng đang chạy để làm banner README, đảm bảo artifact nằm trong source clone gốc và xem được trực tiếp trên GitHub.
+Làm lại demo ứng dụng để làm banner README, ưu tiên màu đẹp, chuyển động mượt và có đủ đoạn test chat. Artifact nằm trong source clone gốc và xem được trực tiếp trên GitHub.
 
 ## Phạm vi
 
@@ -12,23 +12,23 @@ Quay lại demo ứng dụng đang chạy để làm banner README, đảm bảo
 
 ## Artifact
 
-- GIF banner: `docs/assets/rag-chat-demo.gif`.
+- Banner chính: `docs/assets/rag-chat-demo.webp`.
+- GIF fallback: `docs/assets/rag-chat-demo.gif`.
 - Ảnh frame cuối: `docs/assets/rag-chat-web-response.png`.
 - Evidence test: `test/type test/demo-banner-gif-evidence-2026-05-27/`.
 
-## Thông số GIF
+## Thông số banner
 
-- Capture app thật qua Playwright headless.
-- Thời lượng: khoảng 60 giây.
-- Tốc độ trung bình: khoảng 24fps.
-- Kích thước file: khoảng 23MB.
-- Nội dung demo: đăng nhập root local, vào workspace chat, mở công cụ, gửi câu hỏi demo và hiển thị phản hồi từ RAG/vLLM.
+- Render bằng `scripts/make_polished_demo_banner.py`.
+- WebP chính: khoảng 2.6MB.
+- GIF fallback: khoảng 5.4MB.
+- Timeline render: 36 giây, 24fps.
+- Nội dung demo: đăng nhập root local, vào workspace chat, gõ câu hỏi demo, hiển thị phản hồi RAG/vLLM và trạng thái backend/embedding/vLLM/evidence.
 
 ## Lệnh đã chạy
 
 ```bash
-node scripts/capture_web_demo.mjs
-python3 scripts/make_demo_gif.py
+python3 scripts/make_polished_demo_banner.py
 ```
 
 ## Verify
@@ -37,26 +37,17 @@ python3 scripts/make_demo_gif.py
 python3 - <<'PY'
 from PIL import Image
 from pathlib import Path
-p = Path("docs/assets/rag-chat-demo.gif")
+p = Path("docs/assets/rag-chat-demo.webp")
 im = Image.open(p)
-frames = 0
-duration = 0
-try:
-    while True:
-        frames += 1
-        duration += im.info.get("duration", 0)
-        im.seek(im.tell() + 1)
-except EOFError:
-    pass
-print(frames, duration / 1000, frames / (duration / 1000))
+print(im.n_frames, round(p.stat().st_size / 1024 / 1024, 2), im.size)
 PY
 ```
 
 Kết quả đo sau khi xuất:
 
-- Stored frames: 1439.
-- Duration: 60.0s.
-- Average fps: 23.98.
+- WebP stored frames sau tối ưu: 408.
+- Render source: 864 frames, 36 giây, 24fps.
+- Kích thước: khoảng 2.6MB.
 
 ## Ghi chú
 

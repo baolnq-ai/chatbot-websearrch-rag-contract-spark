@@ -1,11 +1,13 @@
-# Evidence demo GIF banner - 2026-05-27
+# Evidence demo banner - 2026-05-27
 
-Thư mục này lưu bằng chứng cho task quay GIF demo ứng dụng làm banner README.
+Thư mục này lưu bằng chứng cho task làm demo banner ứng dụng cho README.
 
 ## Artifact
 
 - `demo-final-frame.png`: frame cuối sau khi đăng nhập, gửi câu demo và nhận phản hồi từ RAG/vLLM.
-- GIF chính nằm tại `docs/assets/rag-chat-demo.gif` để README hiển thị trực tiếp trên GitHub.
+- `polished-banner-chat-frame.png`: frame kiểm tra từ banner WebP mới, cho thấy câu hỏi, câu trả lời và trạng thái service.
+- Banner chính nằm tại `docs/assets/rag-chat-demo.webp` để README hiển thị trực tiếp trên GitHub.
+- GIF fallback nằm tại `docs/assets/rag-chat-demo.gif`.
 - Báo cáo chi tiết nằm tại `docs/reports/demo-banner-gif-20260527-v1.md`.
 
 ## Kết quả

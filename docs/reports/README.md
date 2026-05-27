@@ -6,5 +6,5 @@ Mỗi file báo cáo nên nêu mục tiêu, phạm vi, thay đổi chính, lện
 
 ## Báo cáo mới
 
-- `demo-banner-gif-20260527-v1.md`: báo cáo quay GIF demo app khoảng 60 giây, gần 24fps, dùng làm banner README và có evidence ảnh.
+- `demo-banner-gif-20260527-v1.md`: báo cáo làm demo banner WebP/GIF 36 giây ở 24fps, có đoạn test chat và evidence ảnh.
 - `benchmark-10-30-gb10-20260527-v1.md`: benchmark 16 câu hỏi/22 checks trên GB10/DGX Spark local, có upload file, embedding, vLLM, RAG, web search, contract và dashboard ảnh.

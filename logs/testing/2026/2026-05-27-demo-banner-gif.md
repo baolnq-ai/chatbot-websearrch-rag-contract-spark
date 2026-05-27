@@ -1,22 +1,24 @@
-# Log kiểm thử demo GIF banner - 2026-05-27
+# Log kiểm thử demo banner - 2026-05-27
 
 ## Mục tiêu
 
-Quay demo ứng dụng thật để làm banner README và kiểm tra lại các endpoint chính sau khi cập nhật token budget cho context 8k.
+Làm lại demo banner cho README, ưu tiên màu đẹp, mượt, có đủ đoạn test chat và kiểm tra lại các endpoint chính sau khi cập nhật token budget cho context 8k.
 
 ## Lệnh đã chạy
 
 ```bash
-node scripts/capture_web_demo.mjs
-python3 scripts/make_demo_gif.py
+python3 scripts/make_polished_demo_banner.py
 ```
 
 ## Kết quả
 
-- GIF banner đã xuất: `docs/assets/rag-chat-demo.gif`.
+- WebP banner đã xuất: `docs/assets/rag-chat-demo.webp`.
+- GIF fallback đã xuất: `docs/assets/rag-chat-demo.gif`.
 - Ảnh frame cuối đã xuất: `docs/assets/rag-chat-web-response.png`.
 - Evidence folder: `test/type test/demo-banner-gif-evidence-2026-05-27/`.
-- Đo GIF: 1439 stored frames, 60.0 giây, trung bình 23.98fps.
+- Render source: 864 frames, 36 giây, 24fps.
+- WebP sau tối ưu: khoảng 2.6MB.
+- GIF fallback: khoảng 5.4MB.
 - Endpoint sau capture:
   - Frontend `6101`: `200`.
   - Backend `6102/docs`: `200`.
@@ -31,4 +33,4 @@ python3 scripts/make_demo_gif.py
 
 ## Rủi ro còn lại
 
-- GIF dài 60 giây ở gần 24fps nên dung lượng khoảng 23MB. File vẫn dưới giới hạn push thông thường của GitHub.
+- WebP là banner chính vì giữ màu tốt hơn GIF và nhẹ hơn. GIF fallback vẫn có trong `docs/assets/`.

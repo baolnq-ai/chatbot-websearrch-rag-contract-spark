@@ -27,7 +27,7 @@ Bộ tài liệu này giúp đội phát triển và vận hành:
 - [Chính sách CI/CD nghiêm ngặt](cicd/cicd-policy.md)
 - [Báo cáo thực hiện task hiện tại](reports/task-documentation-readme-cicd-github-summary.md)
 - [Báo cáo benchmark GB10/DGX Spark 10-30 câu](reports/benchmark-10-30-gb10-20260527-v1.md)
-- [Báo cáo demo GIF banner](reports/demo-banner-gif-20260527-v1.md)
+- [Báo cáo demo banner WebP/GIF](reports/demo-banner-gif-20260527-v1.md)
 
 ## Tài liệu gốc quan trọng đang giữ lại
 

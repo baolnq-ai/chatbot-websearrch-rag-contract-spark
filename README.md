@@ -1,6 +1,6 @@
 <div align="center">
 
-![RAG Chat demo](docs/assets/rag-chat-demo.gif)
+![RAG Chat demo](docs/assets/rag-chat-demo.webp)
 
 # RAG Chat Platform
 
@@ -369,7 +369,7 @@ docs/                    Tài liệu kỹ thuật tiếng Việt
 logs/                    Log task, testing, cleanup theo năm
 plans/                   Plan hiện tại và archive
 pipeline/                Benchmark và ghi chú pipeline cũ
-scripts/                 Script hỗ trợ capture demo GIF/screenshot
+scripts/                 Script hỗ trợ capture demo banner/screenshot
 test/                    Benchmark/evidence theo testing-skill, gồm `benmark-10-30`
 tests/                   Smoke/eval test và evidence phụ trợ
 cache/                   Runtime data/cache local, không commit secret hoặc dữ liệu lớn
@@ -389,7 +389,7 @@ cache/                   Runtime data/cache local, không commit secret hoặc d
 - [API reference](docs/api/api-reference.md)
 - [Chính sách CI/CD](docs/cicd/cicd-policy.md)
 - [Reports hub](docs/reports/README.md)
-- [Demo GIF banner 60s ~24fps](docs/reports/demo-banner-gif-20260527-v1.md)
+- [Demo banner WebP/GIF 36s 24fps](docs/reports/demo-banner-gif-20260527-v1.md)
 - [Benchmark GB10/DGX Spark 10-30 câu](docs/reports/benchmark-10-30-gb10-20260527-v1.md)
 - [Logs hub](logs/README.md)
 - [Plans](plans/README.md)
@@ -400,12 +400,12 @@ cache/                   Runtime data/cache local, không commit secret hoặc d
 | --- | --- | --- |
 | Release log | [logs/release](logs/release/README.md) | Log push repo mới, fresh clone, cấu hình Spark và verify startup |
 | Task log | [logs/tasks](logs/tasks/README.md) | Log theo task triển khai, bugfix, cleanup, docs |
-| Testing log | [logs/testing](logs/testing/README.md) | Log benchmark, smoke test, demo GIF và rủi ro còn lại |
+| Testing log | [logs/testing](logs/testing/README.md) | Log benchmark, smoke test, demo banner và rủi ro còn lại |
 | Benchmark 10-30 | [test/benmark-10-30](test/benmark-10-30/README.md) | Bộ benchmark có câu hỏi, upload file, latency, vLLM tokens/s, embedding latency, dashboard và report |
 | Benchmark report | [test/benmark-10-30/results/report.md](test/benmark-10-30/results/report.md) | Kết quả chi tiết từng câu hỏi/chức năng đã test |
 | Benchmark dashboard | [test/benmark-10-30/results/dashboard.html](test/benmark-10-30/results/dashboard.html) | Dashboard HTML xem được trên GitHub source |
 | Full app evidence | [test/type test/full-app-stability-evidence-2026-05-27](<test/type test/full-app-stability-evidence-2026-05-27/README.md>) | Ảnh kiểm thử signin, signup, chat workspace, tool menu, settings và API smoke |
-| Demo GIF evidence | [test/type test/demo-banner-gif-evidence-2026-05-27](<test/type test/demo-banner-gif-evidence-2026-05-27/README.md>) | Ảnh frame cuối và report cho GIF banner README |
+| Demo banner evidence | [test/type test/demo-banner-gif-evidence-2026-05-27](<test/type test/demo-banner-gif-evidence-2026-05-27/README.md>) | Ảnh frame cuối và report cho banner README |
 | Web search eval | [tests/test-websearch](tests/test-websearch/README.md) | Script và artifact kiểm thử web search |
 
 ## Ghi Chú Chính Xác
@@ -413,7 +413,7 @@ cache/                   Runtime data/cache local, không commit secret hoặc d
 - README phản ánh source hiện tại trong repo, đặc biệt là các graph tại `backend/agent_chatbot/graph`.
 - vLLM local trên GB10/DGX Spark đã được xác nhận chạy ổn ngày 2026-05-27 ở `LLM_CONTEXT_WINDOW=8192` và `GPU_MEMORY_UTIL=0.30`. Khi máy thật sự trống memory có thể thử tăng context/GPU util, nhưng cần benchmark lại trước khi ghi thành mặc định.
 - Benchmark 2026-05-27 chạy 16 câu/22 checks, pass 22/0; artifact nằm trong `test/benmark-10-30/`.
-- Demo GIF banner 2026-05-27 dài khoảng 60 giây, trung bình 23.98fps; artifact nằm trong `docs/assets/rag-chat-demo.gif`.
+- Demo banner 2026-05-27 dùng `docs/assets/rag-chat-demo.webp` làm ảnh chính trên README; GIF fallback nằm ở `docs/assets/rag-chat-demo.gif`.
 - Fresh clone local có thể chạy bằng `bash ./run_all_services.sh`; script sẽ tự tạo `.env` từ `.env.example` nếu chưa có.
 - Cache dữ liệu như `cache/pgdata`, `cache/qdrant_storage`, `cache/minio`, `cache/redis_data` và `cache/prometheus_data` là volume runtime, không xóa nếu chưa backup.
 - File `.env` thật không được commit. Chỉ commit `.env.example` không chứa secret.

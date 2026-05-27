@@ -17,6 +17,7 @@ from fastapi.responses import HTMLResponse
 import uvicorn
 
 from src.router.parse_router import router as parse_router
+from src.service.parse_service import warmup_document_converter_async
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -32,6 +33,7 @@ if ROOT_ENV_PATH.exists():
 SERVER_HOST = os.getenv("PARSER_SERVER_HOST", "0.0.0.0")
 SERVER_PORT = int(os.getenv("PARSER_SERVER_PORT", "8005"))
 SERVER_RELOAD = os.getenv("PARSER_SERVER_RELOAD", "true").strip().lower() == "true"
+PRELOAD_DOCLING_MODELS = os.getenv("PARSER_PRELOAD_DOCLING_MODELS", "true").strip().lower() == "true"
 
 
 # --- Cấu hình logging chuẩn production ---
@@ -71,6 +73,30 @@ try:
     logger.info("Prometheus Instrumentator initialized at /metrics")
 except ImportError:
     logger.warning("prometheus_fastapi_instrumentator not installed, /metrics disabled")
+
+
+@app.on_event("startup")
+async def preload_docling_models_on_startup():
+    """
+    Warm-up Docling/EasyOCR/TableFormer khi service khởi động.
+
+    Việc này làm startup lâu hơn ở lần đầu tải model, nhưng tránh để request
+    upload đầu tiên của người dùng bị kẹt vì model cold start.
+    """
+
+    if not PRELOAD_DOCLING_MODELS:
+        logger.info("[DOCLING_WARMUP] Skip preload (PARSER_PRELOAD_DOCLING_MODELS=false)")
+        return
+
+    logger.info("[DOCLING_WARMUP] Bắt đầu preload model Docling/EasyOCR")
+    try:
+        elapsed = await warmup_document_converter_async()
+    except Exception as warmup_error:
+        logger.warning("[DOCLING_WARMUP] Warm-up lỗi, service vẫn tiếp tục: %s", warmup_error)
+        return
+
+    logger.info("[DOCLING_WARMUP] Hoàn tất preload model trong %.2fs", elapsed)
+
 
 # --- Health check endpoint ---
 @app.get("/health")

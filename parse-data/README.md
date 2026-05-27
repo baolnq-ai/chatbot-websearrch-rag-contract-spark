@@ -2,6 +2,8 @@
 
 API parse đa định dạng (PDF, Docx, PPTX, Excel, Ảnh, HTML...) sang markdown sử dụng **Docling** (IBM) với GPU acceleration (CUDA). Hỗ trợ chạy không block event loop bằng `asyncio.to_thread` chuẩn F8.
 
+Khi service khởi động, `PARSER_PRELOAD_DOCLING_MODELS=true` sẽ convert một PDF nhỏ để preload Docling/EasyOCR/TableFormer. Lần đầu start có thể lâu hơn nếu cache model trống, nhưng request upload đầu tiên không phải tự gánh cold start model.
+
 ---
 
 ## 📁 Cây thư mục

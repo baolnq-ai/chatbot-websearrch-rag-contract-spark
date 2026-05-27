@@ -11,6 +11,7 @@ import uuid
 import logging
 import tempfile
 import asyncio
+import time
 from typing import List, Dict, Any
 
 from fastapi import UploadFile
@@ -93,6 +94,57 @@ def convert_file_to_markdown(file_path: str) -> str:
     gc.collect()
 
     return markdown_content
+
+
+def warmup_document_converter() -> float:
+    """
+    Chạy một lần convert PDF nhỏ để Docling/EasyOCR/TableFormer load model sớm.
+
+    Trả về thời gian warm-up theo giây. Nếu warm-up lỗi, caller sẽ log và cho
+    service tiếp tục chạy để không chặn vận hành.
+    """
+
+    warmup_pdf = (
+        b"%PDF-1.4\n"
+        b"1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n"
+        b"2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n"
+        b"3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 300 144] "
+        b"/Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj\n"
+        b"4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n"
+        b"5 0 obj << /Length 61 >> stream\n"
+        b"BT /F1 12 Tf 36 96 Td (Docling warmup document) Tj ET\n"
+        b"endstream endobj\n"
+        b"xref\n"
+        b"0 6\n"
+        b"0000000000 65535 f \n"
+        b"0000000009 00000 n \n"
+        b"0000000058 00000 n \n"
+        b"0000000115 00000 n \n"
+        b"0000000251 00000 n \n"
+        b"0000000321 00000 n \n"
+        b"trailer << /Root 1 0 R /Size 6 >>\n"
+        b"startxref\n"
+        b"431\n"
+        b"%%EOF\n"
+    )
+    temp_path = os.path.join(TEMP_DIR, f"docling_warmup_{uuid.uuid4()}.pdf")
+    start_time = time.perf_counter()
+
+    try:
+        with open(temp_path, "wb") as temp_file:
+            temp_file.write(warmup_pdf)
+        convert_file_to_markdown(temp_path)
+        return time.perf_counter() - start_time
+    finally:
+        cleanup_temp_file(temp_path)
+
+
+async def warmup_document_converter_async() -> float:
+    """
+    Async wrapper để FastAPI startup không block event loop trực tiếp.
+    """
+
+    return await asyncio.to_thread(warmup_document_converter)
 
 
 def cleanup_temp_file(file_path: str) -> None:

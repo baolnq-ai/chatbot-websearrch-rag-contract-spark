@@ -14,6 +14,8 @@ Fresh clone local có thể chạy `bash ./setup.sh`; script tự tạo `.env` t
 
 Không dùng `.env` riêng trong `backend`, `embedding`, `parse-data`, `prometheus-collector`. Frontend vẫn có thể dùng `frontend/.env.local`.
 
+Parse-data dùng `PARSER_PRELOAD_DOCLING_MODELS=true` để preload Docling/EasyOCR/TableFormer khi service khởi động. Lần đầu start có thể lâu hơn nếu cache model trống, nhưng upload đầu tiên không bị treo vì cold start model.
+
 ## vLLM hiện tại
 
 - Model: `google/gemma-4-E4B-it`.

@@ -7,14 +7,16 @@ let playwright;
 try {
   playwright = require("playwright");
 } catch {
-  playwright = require("../.runtime/playwright/node_modules/playwright");
+  playwright = require("../frontend/node_modules/playwright");
 }
 const { chromium } = playwright;
 
 const rootDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const envPath = path.join(rootDir, ".env");
-const outDir = path.join(rootDir, "docs", "assets", "web-demo-frames");
+const outDir = path.join(rootDir, ".runtime", "demo-frames");
 const screenshotPath = path.join(rootDir, "docs", "assets", "rag-chat-web-response.png");
+const durationMs = Number(process.env.DEMO_CAPTURE_DURATION_MS || 60000);
+const captureIntervalMs = Number(process.env.DEMO_CAPTURE_INTERVAL_MS || 125);
 
 function readEnv(filePath) {
   const data = {};
@@ -33,52 +35,68 @@ async function wait(ms) {
 }
 
 async function capture(page, index) {
-  const name = String(index).padStart(3, "0");
+  const name = String(index).padStart(5, "0");
   await page.screenshot({ path: path.join(outDir, `frame-${name}.png`), fullPage: false });
 }
 
 const env = readEnv(envPath);
 const email = env.ROOT_EMAIL;
 const password = env.ROOT_PASSWORD;
-const baseUrl = "http://127.0.0.1:3000";
+const publicPort = env.NGINX_PUBLIC_PORT || "6101";
+const baseUrl = process.env.DEMO_BASE_URL || `http://127.0.0.1:${publicPort}`;
 
 fs.rmSync(outDir, { recursive: true, force: true });
 fs.mkdirSync(outDir, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 });
+const page = await browser.newPage({ viewport: { width: 960, height: 540 }, deviceScaleFactor: 1 });
 
 let frame = 0;
+let capturing = true;
+
+const captureLoop = (async () => {
+  const startedAt = Date.now();
+  while (capturing && Date.now() - startedAt < durationMs) {
+    try {
+      await capture(page, frame++);
+    } catch {
+      // The page can be between navigations; skip one frame and continue.
+    }
+    await wait(captureIntervalMs);
+  }
+})();
+
 await page.goto(`${baseUrl}/signin`, { waitUntil: "networkidle" });
-await capture(page, frame++);
-await page.fill('input[type="email"]', email);
-await page.fill('input[type="password"]', password);
-await capture(page, frame++);
+await wait(1200);
+await page.fill('input[type="email"]', email || "admin@example.com");
+await wait(700);
+await page.fill('input[type="password"]', password || "change_me");
+await wait(800);
 await page.click('button[type="submit"]');
 await page.waitForURL(/\/chat/, { timeout: 30000 });
 await page.waitForLoadState("networkidle");
+await wait(2500);
 
-for (let i = 0; i < 4; i += 1) {
-  await wait(500);
-  await capture(page, frame++);
-}
+await page.getByRole("button", { name: "Công cụ" }).click();
+await wait(2200);
+await page.keyboard.press("Escape").catch(() => {});
+await wait(800);
 
-const prompt = "Kiểm tra nhanh: hệ thống RAG/vLLM đang hoạt động bình thường chứ? Trả lời ngắn gọn.";
-const textarea = page.locator("textarea").last();
-await textarea.fill(prompt);
-await capture(page, frame++);
-await page.keyboard.press("Enter");
+await page.locator("textarea").last().click();
+const prompt = "Demo nhanh: hệ thống RAG/vLLM đang hoạt động thế nào? Trả lời ngắn gọn.";
+await page.keyboard.type(prompt, { delay: 30 });
+await wait(900);
+await page.locator("button").last().click();
 
-for (let i = 0; i < 24; i += 1) {
-  await wait(1000);
-  await capture(page, frame++);
-  const text = await page.locator("body").innerText();
-  if (/hoạt động|bình thường|đang hoạt động|RAG|vLLM/i.test(text) && i >= 5) {
-    break;
-  }
-}
+await wait(16000);
+
+await page.getByTitle("Mở sidebar").click().catch(() => {});
+await wait(5000);
+
+capturing = false;
+await captureLoop;
 
 await page.screenshot({ path: screenshotPath, fullPage: false });
 await browser.close();
 
-console.log(JSON.stringify({ frames: frame, screenshotPath, outDir }, null, 2));
+console.log(JSON.stringify({ frames: frame, durationMs, captureIntervalMs, screenshotPath, outDir, baseUrl }, null, 2));

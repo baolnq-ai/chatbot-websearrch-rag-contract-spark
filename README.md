@@ -11,7 +11,8 @@
 [Kiến trúc](#kiến-trúc) •
 [Pipeline RAG](#pipeline-rag) •
 [Vận hành](#vận-hành) •
-[Tài liệu](#tài-liệu)
+[Tài liệu](#tài-liệu) •
+[Logs & test](#logs--test)
 
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white)
@@ -19,6 +20,8 @@
 ![LangGraph](https://img.shields.io/badge/LangGraph-Pipeline-1d4ed8?style=for-the-badge)
 ![vLLM](https://img.shields.io/badge/vLLM-8k%20context%20%7C%200.30%20GPU-7c3aed?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-2ea44f?style=for-the-badge)
+
+Cập nhật lần cuối: 2026-05-27
 
 </div>
 
@@ -196,13 +199,13 @@ Các ngưỡng hiện đọc từ env root, không hard-code vào pipeline:
 | Biến | Mặc định hiện tại | Vai trò |
 | --- | --- | --- |
 | `LLM_CONTEXT_WINDOW` | `8192` | Cửa sổ context vLLM local ổn định trên GB10/DGX Spark khi còn chạy dịch vụ nền |
-| `LLM_MAX_TOKENS` | `10000` | Output tối đa cho model |
+| `LLM_MAX_TOKENS` | `2048` | Output tối đa cho model, giữ nhỏ hơn context 8k để vLLM không từ chối request |
 | `VLLM_KV_CACHE_MEMORY_BYTES` | `2147483648` | KV cache thủ công 2GiB để tránh lỗi vLLM memory profiling trên unified memory |
-| `RAG_INPUT_TOKEN_BUDGET` | `50000` | Ngân sách input tổng |
-| `RAG_OUTPUT_TOKEN_BUDGET` | `10000` | Ngân sách output RAG |
-| `RAG_FILE_CONTEXT_TOKEN_BUDGET` | `40000` | Phần context tài liệu |
-| `RAG_HISTORY_TOKEN_BUDGET` | `10000` | Phần history liên quan |
-| `RAG_SELECTED_PATH_TOKEN_BUDGET` | `50000` | Budget khi user chọn path |
+| `RAG_INPUT_TOKEN_BUDGET` | `6144` | Ngân sách input tổng trong context 8k |
+| `RAG_OUTPUT_TOKEN_BUDGET` | `2048` | Ngân sách output RAG |
+| `RAG_FILE_CONTEXT_TOKEN_BUDGET` | `4096` | Phần context tài liệu |
+| `RAG_HISTORY_TOKEN_BUDGET` | `1024` | Phần history liên quan |
+| `RAG_SELECTED_PATH_TOKEN_BUDGET` | `6144` | Budget khi user chọn path |
 | `RAG_AVG_TOKENS_PER_CHUNK` | `600` | Ước lượng chunk để chia quota theo path |
 | `RAG_CHARS_PER_TOKEN` | `2.5` | Quy đổi token sang ký tự khi cắt context |
 
@@ -367,6 +370,8 @@ logs/                    Log task, testing, cleanup theo năm
 plans/                   Plan hiện tại và archive
 pipeline/                Benchmark và ghi chú pipeline cũ
 scripts/                 Script hỗ trợ capture demo GIF/screenshot
+test/                    Benchmark/evidence theo testing-skill, gồm `benmark-10-30`
+tests/                   Smoke/eval test và evidence phụ trợ
 cache/                   Runtime data/cache local, không commit secret hoặc dữ liệu lớn
 ```
 
@@ -383,15 +388,32 @@ cache/                   Runtime data/cache local, không commit secret hoặc d
 - [Runbook vận hành](docs/operations/operations-runbook.md)
 - [API reference](docs/api/api-reference.md)
 - [Chính sách CI/CD](docs/cicd/cicd-policy.md)
+- [Reports hub](docs/reports/README.md)
+- [Demo GIF banner 60s ~24fps](docs/reports/demo-banner-gif-20260527-v1.md)
 - [Benchmark GB10/DGX Spark 10-30 câu](docs/reports/benchmark-10-30-gb10-20260527-v1.md)
-- [Logs](logs/README.md)
+- [Logs hub](logs/README.md)
 - [Plans](plans/README.md)
+
+## Logs & Test
+
+| Nhóm | Đường dẫn | Nội dung |
+| --- | --- | --- |
+| Release log | [logs/release](logs/release/README.md) | Log push repo mới, fresh clone, cấu hình Spark và verify startup |
+| Task log | [logs/tasks](logs/tasks/README.md) | Log theo task triển khai, bugfix, cleanup, docs |
+| Testing log | [logs/testing](logs/testing/README.md) | Log benchmark, smoke test, demo GIF và rủi ro còn lại |
+| Benchmark 10-30 | [test/benmark-10-30](test/benmark-10-30/README.md) | Bộ benchmark có câu hỏi, upload file, latency, vLLM tokens/s, embedding latency, dashboard và report |
+| Benchmark report | [test/benmark-10-30/results/report.md](test/benmark-10-30/results/report.md) | Kết quả chi tiết từng câu hỏi/chức năng đã test |
+| Benchmark dashboard | [test/benmark-10-30/results/dashboard.html](test/benmark-10-30/results/dashboard.html) | Dashboard HTML xem được trên GitHub source |
+| Full app evidence | [test/type test/full-app-stability-evidence-2026-05-27](<test/type test/full-app-stability-evidence-2026-05-27/README.md>) | Ảnh kiểm thử signin, signup, chat workspace, tool menu, settings và API smoke |
+| Demo GIF evidence | [test/type test/demo-banner-gif-evidence-2026-05-27](<test/type test/demo-banner-gif-evidence-2026-05-27/README.md>) | Ảnh frame cuối và report cho GIF banner README |
+| Web search eval | [tests/test-websearch](tests/test-websearch/README.md) | Script và artifact kiểm thử web search |
 
 ## Ghi Chú Chính Xác
 
 - README phản ánh source hiện tại trong repo, đặc biệt là các graph tại `backend/agent_chatbot/graph`.
 - vLLM local trên GB10/DGX Spark đã được xác nhận chạy ổn ngày 2026-05-27 ở `LLM_CONTEXT_WINDOW=8192` và `GPU_MEMORY_UTIL=0.30`. Khi máy thật sự trống memory có thể thử tăng context/GPU util, nhưng cần benchmark lại trước khi ghi thành mặc định.
 - Benchmark 2026-05-27 chạy 16 câu/22 checks, pass 22/0; artifact nằm trong `test/benmark-10-30/`.
+- Demo GIF banner 2026-05-27 dài khoảng 60 giây, trung bình 23.98fps; artifact nằm trong `docs/assets/rag-chat-demo.gif`.
 - Fresh clone local có thể chạy bằng `bash ./run_all_services.sh`; script sẽ tự tạo `.env` từ `.env.example` nếu chưa có.
 - Cache dữ liệu như `cache/pgdata`, `cache/qdrant_storage`, `cache/minio`, `cache/redis_data` và `cache/prometheus_data` là volume runtime, không xóa nếu chưa backup.
 - File `.env` thật không được commit. Chỉ commit `.env.example` không chứa secret.
@@ -399,3 +421,5 @@ cache/                   Runtime data/cache local, không commit secret hoặc d
 ## License
 
 Repository dùng giấy phép MIT. Xem [LICENSE](LICENSE).
+
+dev by ambrouse

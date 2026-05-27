@@ -60,8 +60,10 @@ HF_CACHE_MOUNT=/path/to/cache/huggingface bash ./run_all_services.sh
 | --- | --- | --- | --- |
 | NVIDIA GPU + Docker NVIDIA runtime | Có | Máy host | vLLM/embedding/rerank cần GPU để chạy ổn định. |
 | Hugging Face model cache hoặc token | Có nếu cache trống/model gated | `.env`: `HF_TOKEN` hoặc `HUGGING_FACE_HUB_TOKEN` | Dùng để tải `google/gemma-4-E4B-it` khi `cache/huggingface` chưa có model. Nếu máy đã có cache thì có thể để trống. |
-| Secret nội bộ local | Nên đổi | `.env`: `JWT_SECRET_KEY`, `ROOT_PASSWORD`, `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `MINIO_SECRET_KEY`, `SEARXNG_SECRET` | `.env.example` chỉ dùng placeholder `change_me`. Production bắt buộc đổi. |
+| Secret nội bộ local | Nên đổi | `.env`: `JWT_SECRET_KEY`, `ROOT_EMAIL`, `ROOT_PASSWORD`, `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `MINIO_SECRET_KEY`, `SEARXNG_SECRET` | `.env.example` chỉ dùng placeholder `change_me`. Production bắt buộc đổi. |
 | Port local | Có | `.env` | Giữ trong dải `6100-6150`; script sẽ validate trước khi chạy. |
+
+Tài khoản root local để vào web test được tạo từ `.env`: `ROOT_EMAIL` và `ROOT_PASSWORD`. Fresh clone mặc định là `admin@example.com` / `change_me`; đổi hai biến này trước khi chạy production hoặc demo công khai.
 
 ### Optional nhưng giúp chạy đủ chức năng
 

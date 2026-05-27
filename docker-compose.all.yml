@@ -197,6 +197,8 @@ services:
       GPU_MEMORY_UTIL: ${GPU_MEMORY_UTIL:-0.30}
       LLM_CONTEXT_WINDOW: ${LLM_CONTEXT_WINDOW:-8192}
       HF_CACHE_MOUNT: ${HF_CACHE_MOUNT:-./cache/huggingface}
+      HF_TOKEN: ${HF_TOKEN:-}
+      HUGGING_FACE_HUB_TOKEN: ${HUGGING_FACE_HUB_TOKEN:-${HF_TOKEN:-}}
     volumes:
       - ${HF_CACHE_MOUNT:-./cache/huggingface}:/root/.cache/huggingface
       - ./config/vllm/tool_chat_template_gemma4_no_reasoning.jinja:/config/vllm/tool_chat_template_gemma4_no_reasoning.jinja:ro

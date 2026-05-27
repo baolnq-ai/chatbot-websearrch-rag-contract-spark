@@ -254,6 +254,9 @@ services:
     volumes:
       - ${HF_CACHE_MOUNT}:/root/.cache/huggingface
       - ./config/vllm/tool_chat_template_gemma4_no_reasoning.jinja:/config/vllm/tool_chat_template_gemma4_no_reasoning.jinja:ro
+    environment:
+      HF_TOKEN: ${HF_TOKEN:-}
+      HUGGING_FACE_HUB_TOKEN: ${HUGGING_FACE_HUB_TOKEN:-${HF_TOKEN:-}}
     shm_size: '16gb'
     # Command config: model name, memory usage, context length, tool calling
     command: >

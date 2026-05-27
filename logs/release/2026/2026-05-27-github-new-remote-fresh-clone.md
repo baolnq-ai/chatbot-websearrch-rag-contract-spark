@@ -16,6 +16,7 @@ Chuẩn hóa source để push sang repo mới `baolnq-ai/chatbot-websearrch-rag
 ## Phase 2 - Tài liệu và test artifact
 
 - README cập nhật cách chạy một lệnh, port, hạ tầng GB10/DGX Spark và benchmark.
+- README đưa mục `Cần key gì` lên đầu để người clone biết sửa `.env` ở đâu và key nào bắt buộc/optional.
 - Docs vận hành/cấu hình cập nhật fresh clone và cache path.
 - Benchmark/evidence nằm trong `test/benmark-10-30` và `test/type test/...` để xem được trên GitHub.
 

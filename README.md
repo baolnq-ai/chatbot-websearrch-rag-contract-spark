@@ -7,6 +7,7 @@
 **Nền tảng hỏi đáp tài liệu, tìm kiếm web có kiểm chứng và tạo hợp đồng chạy bằng pipeline AI nội bộ.**
 
 [Tổng quan](#tổng-quan) •
+[Cần key gì](#cần-key-gì) •
 [Kiến trúc](#kiến-trúc) •
 [Pipeline RAG](#pipeline-rag) •
 [Vận hành](#vận-hành) •
@@ -36,6 +37,36 @@ Các runtime chính:
 - `nginx`, `prometheus`, exporters: reverse proxy và vận hành.
 
 Mục tiêu kỹ thuật của dự án là giữ pipeline rõ ràng, giảm chi phí GPU, kiểm soát token theo từng nhánh xử lý và vẫn đủ bằng chứng để trả lời ổn định trong môi trường triển khai thật.
+
+## Cần key gì
+
+Fresh clone có thể chạy bằng một lệnh:
+
+```bash
+bash ./run_all_services.sh
+```
+
+Nếu chưa có `.env`, script tự tạo từ `.env.example`. Sau đó sửa `.env` ở root repo, không sửa trực tiếp `.env.example` cho secret thật.
+
+### Tối thiểu để chạy local
+
+| Mục | Bắt buộc? | Sửa ở đâu | Ghi chú |
+| --- | --- | --- | --- |
+| NVIDIA GPU + Docker NVIDIA runtime | Có | Máy host | vLLM/embedding/rerank cần GPU để chạy ổn định. |
+| Hugging Face model cache hoặc token | Có nếu cache trống/model gated | `.env`: `HF_TOKEN` hoặc `HUGGING_FACE_HUB_TOKEN` | Dùng để tải `google/gemma-4-E4B-it` khi `cache/huggingface` chưa có model. Nếu máy đã có cache thì có thể để trống. |
+| Secret nội bộ local | Nên đổi | `.env`: `JWT_SECRET_KEY`, `ROOT_PASSWORD`, `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `MINIO_SECRET_KEY`, `SEARXNG_SECRET` | `.env.example` chỉ dùng placeholder `change_me`. Production bắt buộc đổi. |
+| Port local | Có | `.env` | Giữ trong dải `6100-6150`; script sẽ validate trước khi chạy. |
+
+### Optional nhưng giúp chạy đủ chức năng
+
+| Chức năng | Key/env | Khi không có key |
+| --- | --- | --- |
+| Web search provider ngoài | `BRAVE_SEARCH_API_KEY`, `BING_SEARCH_API_KEY` | Hệ thống vẫn dùng SearxNG local, chất lượng/latency phụ thuộc provider public. |
+| Provider LLM ngoài | `NVIDIA_API_KEY`, `OPENROUTER_API_KEY`, `GROQ_API_KEY` | Không ảnh hưởng local vLLM; các provider ngoài chỉ inactive/không infer được nếu thiếu key. |
+| GeoIP đầy đủ | `MAXMIND_LICENSE_KEY` hoặc `GEOIP_CITY_DB_URL`, `GEOIP_ASN_DB_URL` | Fresh clone vẫn chạy với `GEOIP_STRICT=false`; IP geolocation bị degrade. |
+| Cloudflare/domain production | `FRONTEND_URL`, `BACKEND_URL`, `NEXT_PUBLIC_APP_URL`, `CORS_ALLOW_ORIGINS` | Local mặc định dùng `http://localhost:6101`. |
+
+Không commit `.env`, token, cookie, private key hoặc file `.mmdb` runtime. Nếu lỡ lộ key, rotate/revoke key trước khi push lại.
 
 ## Kiến trúc
 

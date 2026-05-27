@@ -36,24 +36,48 @@ Chuẩn hóa source để push sang repo mới `baolnq-ai/chatbot-websearrch-rag
 
 ## Phase 3 - Push và fresh clone
 
-Trạng thái cập nhật:
-
-- Đã tạo commit local `da7d70f` trước khi xử lý snapshot.
 - Đã thêm remote mới `spark=https://github.com/baolnq-ai/chatbot-websearrch-rag-contract-spark.git`.
-- Sau khi login lại GitHub, push thường vẫn bị GitHub Push Protection chặn vì lịch sử repo cũ có commit chứa Hugging Face token trong `docker-compose.yml`.
-- Hướng xử lý: tạo snapshot/orphan commit chỉ chứa source hiện tại sạch, không đẩy lịch sử cũ sang repo mới.
+- Push thường bị GitHub Push Protection chặn vì lịch sử repo cũ có commit chứa Hugging Face token trong `docker-compose.yml`.
+- Đã tạo snapshot/orphan commit chỉ chứa source hiện tại sạch, không đẩy lịch sử cũ sang repo mới.
 - Đã bỏ track `backend/database/geoip/*.mmdb` vì `GeoLite2-City.mmdb` lớn hơn 50MB; fresh clone mặc định chạy với `GEOIP_STRICT=false`.
-- Đã dừng compose services và tmux/code processes của source hiện tại bằng `stop_all_services.sh` và cleanup PID còn sót theo path repo.
+- Đã dừng compose services và tmux/code processes của source cũ bằng `stop_all_services.sh` và cleanup PID còn sót theo path repo.
+- Đã push source snapshot sạch lên repo mới.
 
-Việc còn lại sau khi có credential:
+Các commit chính đã push:
+
+- `76ee5c9` - source snapshot sạch đầu tiên.
+- `2b7434d` - document required runtime keys.
+- `50d743d` - support external HF cache on first run.
+- `cbeaaf7` - pin vLLM KV cache for Spark.
+
+## Fresh clone verify
+
+Thư mục test:
 
 ```bash
-gh auth login -h github.com
-git push spark main
+/home/ntcai/NTC-App/chatbot/chatbot-websearrch-rag-contract-spark-fresh2
 ```
 
-Sau push cần clone lại repo mới vào thư mục sạch và chạy:
+Lệnh chạy một lần:
 
 ```bash
-bash ./run_all_services.sh
+HF_CACHE_MOUNT=/home/ntcai/NTC-App/chatbot/multiagent_chatbot_contract_github/cache/huggingface bash ./run_all_services.sh
 ```
+
+Kết quả:
+
+- `.env` được tự tạo từ `.env.example`.
+- Dependency backend, parse-data, embedding, prometheus-collector và frontend cài được từ fresh clone.
+- Docker Compose dựng được các service hạ tầng trong dải port `6100-6150`.
+- vLLM nhận đúng `VLLM_KV_CACHE_MEMORY_BYTES=2147483648`, bỏ memory profiling KV cache và ready `200`.
+- Backend ready `200`: `http://localhost:6102/docs`.
+- Frontend qua Nginx ready `200`: `http://localhost:6101/`.
+- Parse-data ready `200`: `http://localhost:6104/docs`.
+- Embedding ready `200`: `http://localhost:6105/docs`.
+- vLLM models ready `200`: `http://localhost:6106/v1/models`.
+
+Ghi chú vận hành:
+
+- Fresh clone không cần GeoIP để boot vì `GEOIP_STRICT=false`; chức năng IP geolocation/monitoring sẽ degrade nếu thiếu MaxMind key hoặc `.mmdb`.
+- Nếu cache Hugging Face trống hoặc model gated, cần điền `HF_TOKEN` hoặc `HUGGING_FACE_HUB_TOKEN` trong `.env`.
+- `npm install` frontend báo `10 vulnerabilities (5 moderate, 5 high)`; đây là cảnh báo audit dependency, không chặn boot.

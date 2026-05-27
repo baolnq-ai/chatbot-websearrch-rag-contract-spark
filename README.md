@@ -195,6 +195,7 @@ Các ngưỡng hiện đọc từ env root, không hard-code vào pipeline:
 | --- | --- | --- |
 | `LLM_CONTEXT_WINDOW` | `8192` | Cửa sổ context vLLM local ổn định trên GB10/DGX Spark khi còn chạy dịch vụ nền |
 | `LLM_MAX_TOKENS` | `10000` | Output tối đa cho model |
+| `VLLM_KV_CACHE_MEMORY_BYTES` | `2147483648` | KV cache thủ công 2GiB để tránh lỗi vLLM memory profiling trên unified memory |
 | `RAG_INPUT_TOKEN_BUDGET` | `50000` | Ngân sách input tổng |
 | `RAG_OUTPUT_TOKEN_BUDGET` | `10000` | Ngân sách output RAG |
 | `RAG_FILE_CONTEXT_TOKEN_BUDGET` | `40000` | Phần context tài liệu |
@@ -253,7 +254,7 @@ Contract module có ba nhánh: tạo thường, tạo nhanh và reasoning nhiề
 | Độ đúng ngữ cảnh | Chunk theo heading, giữ heading integrity, ghép đủ mục thay vì chỉ lấy một đoạn rời |
 | Kiểm soát token | Budget input, output, file context, history và selected path nằm trong env |
 | Trải nghiệm realtime | Node pipeline đẩy SSE event để frontend hiển thị tiến độ parse/search/rerank/answer |
-| Vận hành GPU | vLLM 8k context local ổn định, `GPU_MEMORY_UTIL=0.30`, KV cache fp8, tắt multimodal limit không dùng |
+| Vận hành GPU | vLLM 8k context local ổn định, `GPU_MEMORY_UTIL=0.30`, `VLLM_KV_CACHE_MEMORY_BYTES=2147483648`, KV cache fp8, tắt multimodal limit không dùng |
 | Production data layer | PostgreSQL qua PgBouncer, Qdrant vector DB, Redis cache, MinIO object store |
 | Web evidence | Broker đa provider, retry, cache, source policy, citation validation và verifier loop |
 | Bảo trì | Graph khai báo luồng, util giữ logic nặng, docs/logs/plans có taxonomy riêng |

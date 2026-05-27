@@ -18,6 +18,7 @@ Chuẩn hóa source để push sang repo mới `baolnq-ai/chatbot-websearrch-rag
 - README cập nhật cách chạy một lệnh, port, hạ tầng GB10/DGX Spark và benchmark.
 - README đưa mục `Cần key gì` lên đầu để người clone biết sửa `.env` ở đâu và key nào bắt buộc/optional.
 - `run_all_services.sh` tôn trọng `HF_CACHE_MOUNT` truyền từ shell khi tự tạo `.env`, giúp fresh clone dùng lại model cache sẵn có bằng một lệnh.
+- Fresh clone test đầu tiên fail ở vLLM readiness do lỗi memory profiling lặp lại trên unified memory. Đã thêm `VLLM_KV_CACHE_MEMORY_BYTES=2147483648` và truyền `--kv-cache-memory-bytes` để tránh profiling KV cache.
 - Docs vận hành/cấu hình cập nhật fresh clone và cache path.
 - Benchmark/evidence nằm trong `test/benmark-10-30` và `test/type test/...` để xem được trên GitHub.
 

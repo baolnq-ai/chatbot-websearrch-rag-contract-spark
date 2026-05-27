@@ -59,7 +59,7 @@ services:
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       LLM_MAX_TOKENS: ${LLM_MAX_TOKENS:-10000}
       LLM_TIMEOUT: ${LLM_TIMEOUT:-3600}
-      LLM_CONTEXT_WINDOW: ${LLM_CONTEXT_WINDOW:-65536}
+      LLM_CONTEXT_WINDOW: ${LLM_CONTEXT_WINDOW:-8192}
       RAG_INPUT_TOKEN_BUDGET: ${RAG_INPUT_TOKEN_BUDGET:-50000}
       RAG_OUTPUT_TOKEN_BUDGET: ${RAG_OUTPUT_TOKEN_BUDGET:-10000}
       RAG_FILE_CONTEXT_TOKEN_BUDGET: ${RAG_FILE_CONTEXT_TOKEN_BUDGET:-40000}
@@ -195,6 +195,7 @@ services:
     environment:
       VLLM_MODEL_NAME: ${VLLM_MODEL_NAME:-google/gemma-4-E4B-it}
       GPU_MEMORY_UTIL: ${GPU_MEMORY_UTIL:-0.30}
+      VLLM_KV_CACHE_MEMORY_BYTES: ${VLLM_KV_CACHE_MEMORY_BYTES:-2147483648}
       LLM_CONTEXT_WINDOW: ${LLM_CONTEXT_WINDOW:-8192}
       HF_CACHE_MOUNT: ${HF_CACHE_MOUNT:-./cache/huggingface}
       HF_TOKEN: ${HF_TOKEN:-}
@@ -206,6 +207,7 @@ services:
     command: >
       --model ${VLLM_MODEL_NAME:-google/gemma-4-E4B-it}
       --gpu-memory-utilization ${GPU_MEMORY_UTIL:-0.30}
+      --kv-cache-memory-bytes ${VLLM_KV_CACHE_MEMORY_BYTES:-2147483648}
       --max-model-len ${LLM_CONTEXT_WINDOW:-8192}
       --dtype bfloat16
       --trust-remote-code

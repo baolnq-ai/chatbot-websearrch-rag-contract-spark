@@ -262,6 +262,7 @@ services:
     command: >
       --model ${VLLM_MODEL_NAME}
       --gpu-memory-utilization ${GPU_MEMORY_UTIL:-0.30}
+      --kv-cache-memory-bytes ${VLLM_KV_CACHE_MEMORY_BYTES:-2147483648}
       --max-model-len ${LLM_CONTEXT_WINDOW:-8192}
       --dtype bfloat16
       --trust-remote-code

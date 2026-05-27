@@ -19,10 +19,12 @@ Không dùng `.env` riêng trong `backend`, `embedding`, `parse-data`, `promethe
 - Model: `google/gemma-4-E4B-it`.
 - Context local mặc định: `LLM_CONTEXT_WINDOW=8192`.
 - GPU memory local mặc định: `GPU_MEMORY_UTIL=0.30`.
+- KV cache thủ công: `VLLM_KV_CACHE_MEMORY_BYTES=2147483648`.
 - KV cache: `--kv-cache-dtype fp8`.
 - HF cache trong `.env.example`: `HF_CACHE_MOUNT=./cache/huggingface`; khi script tự tạo `.env`, giá trị này được đổi sang `HF_CACHE_MOUNT` truyền từ shell hoặc absolute path của repo clone.
 - Nếu cache trống hoặc model Hugging Face yêu cầu xác thực, đặt `HF_TOKEN` hoặc `HUGGING_FACE_HUB_TOKEN` trong `.env`.
 - Kết quả kiểm tra ngày 2026-05-27 trên GB10/DGX Spark: `0.37` cần khoảng 45 GiB free unified memory tại thời điểm vLLM init và có thể fail khi còn dịch vụ nền; `0.30` với context 8k chạy ổn hơn cho local all-services.
+- Fresh clone test ngày 2026-05-27 cho thấy vLLM có thể lặp lỗi memory profiling khi unified memory biến động. Vì vậy compose đặt thêm `--kv-cache-memory-bytes 2147483648` để bỏ bước tính KV cache bằng profiling và giữ 8k context ổn định hơn.
 
 ## Budget RAG
 

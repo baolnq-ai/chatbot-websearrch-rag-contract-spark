@@ -187,7 +187,8 @@ load_env_if_exists() {
     echo "[env] .env not found -> creating local .env from .env.example"
     cp ".env.example" "$ENV_FILE"
     if grep -q '^HF_CACHE_MOUNT=./cache/huggingface$' "$ENV_FILE"; then
-      sed -i "s|^HF_CACHE_MOUNT=./cache/huggingface$|HF_CACHE_MOUNT=$PROJECT_ROOT/cache/huggingface|" "$ENV_FILE"
+      local hf_cache_mount="${HF_CACHE_MOUNT:-$PROJECT_ROOT/cache/huggingface}"
+      sed -i "s|^HF_CACHE_MOUNT=./cache/huggingface$|HF_CACHE_MOUNT=$hf_cache_mount|" "$ENV_FILE"
     fi
     echo "[env] Created $ENV_FILE. Review secrets before production use."
   fi

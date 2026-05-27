@@ -48,6 +48,12 @@ bash ./run_all_services.sh
 
 Nếu chưa có `.env`, script tự tạo từ `.env.example`. Sau đó sửa `.env` ở root repo, không sửa trực tiếp `.env.example` cho secret thật.
 
+Nếu máy đã có Hugging Face cache ở thư mục khác, có thể truyền ngay trong lệnh đầu tiên:
+
+```bash
+HF_CACHE_MOUNT=/path/to/cache/huggingface bash ./run_all_services.sh
+```
+
 ### Tối thiểu để chạy local
 
 | Mục | Bắt buộc? | Sửa ở đâu | Ghi chú |

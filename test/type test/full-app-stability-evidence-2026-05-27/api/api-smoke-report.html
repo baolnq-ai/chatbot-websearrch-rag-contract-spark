@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>API smoke evidence 2026-05-27</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; color: #14213d; background: #f8fafc; }
+    h1 { margin-bottom: 4px; }
+    .summary { display: flex; gap: 12px; margin: 16px 0; }
+    .box { padding: 12px 16px; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    th, td { padding: 8px; border: 1px solid #cbd5e1; vertical-align: top; font-size: 13px; }
+    th { background: #e2e8f0; text-align: left; }
+    tr.pass td:first-child { color: #047857; font-weight: 700; }
+    tr.fail td:first-child { color: #b91c1c; font-weight: 700; }
+    pre { white-space: pre-wrap; word-break: break-word; max-width: 420px; margin: 0; }
+  </style>
+</head>
+<body>
+  <h1>API smoke evidence</h1>
+  <p>Public entrypoint: <code>http://localhost:6101</code>. Port policy: <code>6100-6150</code>.</p>
+  <div class="summary">
+    <div class="box">Total: <strong>26</strong></div>
+    <div class="box">Passed: <strong>26</strong></div>
+    <div class="box">Failed: <strong>0</strong></div>
+  </div>
+  <table>
+    <thead><tr><th>Result</th><th>Check</th><th>Method</th><th>Status</th><th>Time</th><th>URL</th><th>Output preview</th></tr></thead>
+    <tbody>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Public frontend home qua nginx</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>28ms</td>
+    <td><code>http://localhost:6101/</code></td>
+    <td><pre>&lt;!DOCTYPE html&gt;&lt;!--6LiDSIBw_m7hVO1eDVly_--&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charSet="utf-8"/&gt;&lt;meta name="viewport" content="width=device-width, initial-scale=1"/&gt;&lt;link rel="stylesheet" href="/_next/static/chunks/4d3ee15dd3e26cdc.css" data-precedence="next"/&gt;&lt;link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/2a422ba3a938e3b7.js"/&gt;&lt;script src="/_next/static/chunks/bfabf3550b8e3225.js" async=""&gt;&lt;/script&gt;&lt;script src="/_next/static/chunks/7d6514a90169e63d.js" async=""&gt;&lt;/script&gt;</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Signin page qua nginx</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>3ms</td>
+    <td><code>http://localhost:6101/signin</code></td>
+    <td><pre>&lt;!DOCTYPE html&gt;&lt;!--6LiDSIBw_m7hVO1eDVly_--&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charSet="utf-8"/&gt;&lt;meta name="viewport" content="width=device-width, initial-scale=1"/&gt;&lt;link rel="stylesheet" href="/_next/static/chunks/4d3ee15dd3e26cdc.css" data-precedence="next"/&gt;&lt;link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/2a422ba3a938e3b7.js"/&gt;&lt;script src="/_next/static/chunks/bfabf3550b8e3225.js" async=""&gt;&lt;/script&gt;&lt;script src="/_next/static/chunks/7d6514a90169e63d.js" async=""&gt;&lt;/script&gt;</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Signup page qua nginx</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>3ms</td>
+    <td><code>http://localhost:6101/signup</code></td>
+    <td><pre>&lt;!DOCTYPE html&gt;&lt;!--6LiDSIBw_m7hVO1eDVly_--&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charSet="utf-8"/&gt;&lt;meta name="viewport" content="width=device-width, initial-scale=1"/&gt;&lt;link rel="stylesheet" href="/_next/static/chunks/4d3ee15dd3e26cdc.css" data-precedence="next"/&gt;&lt;link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/2a422ba3a938e3b7.js"/&gt;&lt;script src="/_next/static/chunks/bfabf3550b8e3225.js" async=""&gt;&lt;/script&gt;&lt;script src="/_next/static/chunks/7d6514a90169e63d.js" async=""&gt;&lt;/script&gt;</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Forgot password page qua nginx</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>2ms</td>
+    <td><code>http://localhost:6101/forgot-password</code></td>
+    <td><pre>&lt;!DOCTYPE html&gt;&lt;!--6LiDSIBw_m7hVO1eDVly_--&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charSet="utf-8"/&gt;&lt;meta name="viewport" content="width=device-width, initial-scale=1"/&gt;&lt;link rel="stylesheet" href="/_next/static/chunks/4d3ee15dd3e26cdc.css" data-precedence="next"/&gt;&lt;link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/2a422ba3a938e3b7.js"/&gt;&lt;script src="/_next/static/chunks/bfabf3550b8e3225.js" async=""&gt;&lt;/script&gt;&lt;script src="/_next/static/chunks/7d6514a90169e63d.js" async=""&gt;&lt;/script&gt;</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Backend Swagger docs</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>3ms</td>
+    <td><code>http://localhost:6102/docs</code></td>
+    <td><pre>
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css"&gt;
+    &lt;link rel="shortcut icon" href="https://fastapi.tiangolo.com/img/favicon.png"&gt;
+    &lt;title&gt;Chatbot Multi-Agent Bách Việt - Swagger UI&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;div id="swagger-ui"&gt;
+    &lt;/div&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Parse-data Swagger docs</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>1ms</td>
+    <td><code>http://localhost:6104/docs</code></td>
+    <td><pre>
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css"&gt;
+    &lt;link rel="shortcut icon" href="https://fastapi.tiangolo.com/img/favicon.png"&gt;
+    &lt;title&gt;Parse-Data Service - Swagger UI&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;div id="swagger-ui"&gt;
+    &lt;/div&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Embedding Swagger docs</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>1ms</td>
+    <td><code>http://localhost:6105/docs</code></td>
+    <td><pre>
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css"&gt;
+    &lt;link rel="shortcut icon" href="https://fastapi.tiangolo.com/img/favicon.png"&gt;
+    &lt;title&gt;Embedding &amp; Reranking Service - Swagger UI&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;div id="swagger-ui"&gt;
+    &lt;/div&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>vLLM models</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>2ms</td>
+    <td><code>http://localhost:6106/v1/models</code></td>
+    <td><pre>{"object":"list","data":[{"id":"google/gemma-4-E4B-it","object":"model","created":1779853827,"owned_by":"vllm","root":"google/gemma-4-E4B-it","parent":null,"max_model_len":8192,"permission":[{"id":"modelperm-897a1ffe3126cc72","object":"model_permission","created":1779853827,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>vLLM chat completion ngắn</td>
+    <td>POST</td>
+    <td>200</td>
+    <td>1838ms</td>
+    <td><code>http://localhost:6106/v1/chat/completions</code></td>
+    <td><pre>{"id":"chatcmpl-b7518d1d9688eaad","object":"chat.completion","created":1779853827,"prompt_routed_experts":null,"model":"google/gemma-4-E4B-it","choices":[{"index":0,"message":{"role":"assistant","content":"PASS","refusal":null,"annotations":null,"audio":null,"function_call":null,"tool_calls":[],"reasoning":null},"logprobs":null,"finish_reason":"stop","stop_reason":106,"token_ids":null,"routed_experts":null}],"service_tier":null,"system_fingerprint":"vllm-0.21.0-c2f96dff","usage":{"prompt_tokens"</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Login root account</td>
+    <td>POST</td>
+    <td>200</td>
+    <td>226ms</td>
+    <td><code>http://localhost:6101/api/v1/auth/login</code></td>
+    <td><pre>{"status":200,"account":{"id":1,"email":"admin@example.com","name":"Root Admin","phone":null,"address":null,"is_verified":true,"is_active":true,"has_avatar":false,"roles":["root"],"created_at":"2026-05-27T02:43:58.586157+00:00","updated_at":null},"login_tracking":{"action":"login","ip":"172.19.0.4","is_private_ip":true,"country":"LAN","city":"Private Network","latitude":null,"longitude":null,"isp":"Local Network","asn":null,"as_org":null,"os":"Other","browser":"Other","device_type":"Unknown","is</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Auth me bằng cookie httponly</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>11ms</td>
+    <td><code>http://localhost:6101/api/v1/auth/me</code></td>
+    <td><pre>{"status":200,"result":{"id":1,"email":"admin@example.com","name":"Root Admin","phone":null,"address":null,"is_verified":true,"is_active":true,"has_avatar":false,"roles":["root"],"created_at":"2026-05-27T02:43:58.586157+00:00","updated_at":null}}</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>RAG check endpoint</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>2ms</td>
+    <td><code>http://localhost:6101/api/v1/rags/check</code></td>
+    <td><pre>{"status":"ok"}</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>RAG models endpoint</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>7ms</td>
+    <td><code>http://localhost:6101/api/v1/rags/models</code></td>
+    <td><pre>{"status":200,"models":[{"id":"1::google/gemma-4-E4B-it","model_name":"google/gemma-4-E4B-it","display_name":"gemma-4-E4B-it","provider_id":1,"provider_name":"Local vLLM","provider_type":"local_vllm","source":"local","source_label":"Local vLLM","is_default_provider":true,"base_url":"http://127.0.0.1:6106/v1"},{"id":"2::meta/llama-3.1-70b-instruct","model_name":"meta/llama-3.1-70b-instruct","display_name":"llama-3.1-70b-instruct","provider_id":2,"provider_name":"NVIDIA Enterprise (OpenAI Compatib</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>RAG SSE trả lời ngắn</td>
+    <td>POST</td>
+    <td>200</td>
+    <td>2294ms</td>
+    <td><code>http://localhost:6101/api/v1/rags/rag-contract-fast</code></td>
+    <td><pre>data: {"user_id": "1", "session_id": -1, "title": "Đang tìm kiếm tài liệu tự động...", "mess": "", "end": false}
+
+data: {"user_id": "1", "session_id": -1, "title": "Đang tìm kiếm tài liệu...", "mess": "", "end": false}
+
+data: {"user_id": "1", "session_id": -1, "title": "Đang tạo vector embedding cho câu hỏi...", "mess": "", "end": false}
+
+data: {"user_id": "1", "session_id": -1, "title": "Đang tìm kiếm vector trong cơ sở dữ liệu (top 10 paths)...", "mess": "", "end": false}
+
+data: {"user_id": "1</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>RAG sessions list</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>23ms</td>
+    <td><code>http://localhost:6101/api/v1/rags/sesion</code></td>
+    <td><pre>{"status":200,"result":[{"id":1,"name":"Trả lời đúng một từ:","is_pinned":false,"paths":[],"created_at":"2026-05-27T03:50:31.976976+00:00","updated_at":"2026-05-27T03:50:31.998318+00:00"}]}</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>RAG files list</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>40ms</td>
+    <td><code>http://localhost:6101/api/v1/rags/file</code></td>
+    <td><pre>{"status":200,"result":[]}</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Contract templates list</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>6ms</td>
+    <td><code>http://localhost:6101/api/v1/contracts/load-template</code></td>
+    <td><pre>{"status":200,"result":[]}</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Contract outputs list</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>5ms</td>
+    <td><code>http://localhost:6101/api/v1/contracts/load-contract</code></td>
+    <td><pre>{"status":200,"result":[]}</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Admin mail settings</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>6ms</td>
+    <td><code>http://localhost:6101/api/v1/admin/settings/mail</code></td>
+    <td><pre>[{"host":"smtp.gmail.com","port":587,"user":"change-me","password":"[redacted]","from_email":"service@ntcai.vn","from_name":"ChatBot NTC","logo_url":null,"is_active":false,"id":1}]</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Admin prompt features</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>6ms</td>
+    <td><code>http://localhost:6101/api/v1/admin/settings/prompt-features</code></td>
+    <td><pre>{"status":200,"result":[{"feature_key":"rag_assistant","label":"RAG Assistant","description":"Prompt hệ thống cho chatbot tra cứu tài liệu RAG."},{"feature_key":"contract_template_drafter","label":"Contract Templated","description":"Prompt tạo hợp đồng theo template có sẵn."},{"feature_key":"contract_fast_drafter","label":"Contract Fast","description":"Prompt tạo hợp đồng nhanh không cần template."},{"feature_key":"contract_summary","label":"Contract Summary","description":"Prompt tóm tắt hợp đồ</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Admin prompts</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>7ms</td>
+    <td><code>http://localhost:6101/api/v1/admin/settings/prompts</code></td>
+    <td><pre>[{"name":"CONTRACT_FAST_SYSTEM_PROMPT","feature_key":"contract_fast_drafter","content":"Bạn là Luật sư Trưởng chuyên nghiệp tại Việt Nam. Nhiệm vụ của bạn là soạn thảo một hợp đồng pháp lý HOÀN CHỈNH từ con số Không dựa trên yêu cầu ngắn gọn của người dùng.\n\nQUY TẮC TUYỆT ĐỐI — VI PHẠM LÀ SAI:\n1. CHỈ xuất nội dung hợp đồng thuần túy. KHÔNG lời chào, KHÔNG giải thích, KHÔNG ghi chú. Chữ đầu tiên sinh ra phải bắt đầu bằng CỘNG HÒA XÃ HỘI CHỦ NGHĨA...\n2. Hợp đồng phải ĐẦY ĐỦ các phần: Quốc hiệu</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Admin LLM providers</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>9ms</td>
+    <td><code>http://localhost:6101/api/v1/admin/settings/llm-providers</code></td>
+    <td><pre>[{"name":"Local vLLM","provider_type":"local_vllm","base_url":"http://127.0.0.1:6106/v1","api_key":"","models":["google/gemma-4-E4B-it"],"description":"Model local chạy qua vLLM","is_active":true,"is_default":true,"id":1},{"name":"NVIDIA Enterprise (OpenAI Compatible)","provider_type":"openai_compatible","base_url":"https://integrate.api.nvidia.com/v1","api_key":"","models":["meta/llama-3.1-70b-instruct","meta/llama-3.1-405b-instruct"],"description":"NVIDIA NIM API có sẵn các model cao cấp (cần </pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Admin web source rules</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>8ms</td>
+    <td><code>http://localhost:6101/api/v1/admin/settings/web-sources</code></td>
+    <td><pre>[]</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>Admin analytics</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>9ms</td>
+    <td><code>http://localhost:6101/api/v1/analytics/admin</code></td>
+    <td><pre>{"users":1,"chats":1,"messages":2,"tokens":23,"files":0,"success":true}</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>User analytics</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>12ms</td>
+    <td><code>http://localhost:6101/api/v1/analytics/me</code></td>
+    <td><pre>{"my_chats":1,"my_messages":2,"my_tokens":23,"my_files":0,"success":true}</pre></td>
+  </tr>
+  <tr class="pass">
+    <td>PASS</td>
+    <td>System metrics</td>
+    <td>GET</td>
+    <td>200</td>
+    <td>71ms</td>
+    <td><code>http://localhost:6101/api/v1/analytics/system-metrics</code></td>
+    <td><pre>{"metrics":{"core_services":{"redis":1,"fastapi-parser":1,"minio":1,"qdrant":1,"fastapi-backend":1,"vllm":1,"postgres":1,"fastapi-embedding":1},"cpu_usage":16.371052631578948,"ram_usage":64.51247166954542,"disk_used":15.991477548353174,"gpu_temp":53,"gpu_util":0,"vram_usage":0,"kv_cache":0,"vllm_running":0,"vllm_waiting":0,"token_gen":0,"token_prompt":0,"api_traffic":{"fastapi-parser":0.08888888888888888,"fastapi-backend":0.5333333333333333,"fastapi-embedding":0.11111111111111109},"api_latency":</pre></td>
+  </tr></tbody>
+  </table>
+</body>
+</html>

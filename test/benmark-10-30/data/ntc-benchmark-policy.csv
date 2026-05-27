@@ -1,0 +1,12 @@
+section,key,value
+support_hours,weekday,08:00-18:00
+support_hours,saturday,09:00-12:00
+sla,p1_response_minutes,15
+sla,p2_response_minutes,60
+sla,p3_response_minutes,240
+contract,default_payment_term,30 ngày sau nghiệm thu
+contract,late_penalty,0.05% mỗi ngày nhưng không quá 8% giá trị hợp đồng
+security,upload_limit_mb,10
+security,allowed_ports,6100-6150
+operations,vllm_default_gpu_util,0.30
+operations,vllm_context_window,8192

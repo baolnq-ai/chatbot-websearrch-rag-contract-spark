@@ -314,11 +314,11 @@ Script sẽ chờ vLLM sẵn sàng tại `6106/v1/models` trước khi bật emb
 ### Dừng local bằng script
 
 ```bash
-bash ./stop_all_services.sh
+bash ./stop.sh
 ```
 
 Script này dừng tmux code services và `docker compose down`, nhưng giữ nguyên dữ liệu runtime trong `cache/` và `.runtime/`.
-`stop_all_services.sh` cũng kill stale process còn nằm trong source hiện tại để tránh tràn RAM khi restart nhiều lần.
+`stop.sh` cũng kill stale process còn nằm trong source hiện tại để tránh tràn RAM khi restart nhiều lần.
 
 ### Chạy hạ tầng Docker
 

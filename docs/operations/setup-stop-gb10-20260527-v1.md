@@ -34,14 +34,14 @@ Khi `cache/huggingface` đã có model, vLLM vẫn có thể mất khoảng vài
 ## Dừng dự án
 
 ```bash
-bash ./stop_all_services.sh
+bash ./stop.sh
 ```
 
 Script dừng tmux, kill stale process còn lại trong source hiện tại và chạy `docker compose down --remove-orphans`. Dữ liệu trong `cache/` và `.runtime/` được giữ lại.
 
 ## Kết quả verify 2026-05-27
 
-- `bash -n setup.sh stop_all_services.sh`: pass.
+- `bash -n setup.sh stop.sh`: pass.
 - `bash ./setup.sh`: pass sau khi tự dọn tmux/process/container cũ.
 - Health check pass:
   - `http://127.0.0.1:6101/`
@@ -56,4 +56,3 @@ Script dừng tmux, kill stale process còn lại trong source hiện tại và 
 - Nếu cache HF trống và không có `HF_TOKEN`, tải model có thể chậm hoặc bị rate-limit.
 - GeoIP vẫn degraded nếu chưa cung cấp `MAXMIND_LICENSE_KEY` hoặc URL `.mmdb`.
 - `npm audit` báo 10 vulnerabilities trong frontend dependency; chưa chặn startup nhưng cần xử lý riêng trước production.
-

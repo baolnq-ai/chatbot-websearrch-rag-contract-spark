@@ -36,7 +36,7 @@ SETUP_LOCAL_DEPS=false FRONTEND_BUILD_ON_START=true RUN_CODE_SERVICES=true bash 
 Stop full stack:
 
 ```bash
-bash ./stop_all_services.sh
+bash ./stop.sh
 ```
 
 Mặc định ổn định cho GB10/DGX Spark local:
